@@ -2586,4 +2586,58 @@ section {
     .launch-arrow {
         display: none;
     }
+
+    /* ── About Section Fixes ── */
+    .about-wrapper {
+        grid-template-columns: 1fr; /* Stack image and content vertically */
+        gap: 50px;
+        padding-top: 40px;
+    }
+
+    .image-frame {
+        max-width: 350px;
+        margin: 0 auto; /* Center image */
+    }
+
+    .image-stats {
+        left: 10px; /* Adjust badge position for smaller screens */
+        bottom: 10px;
+    }
+
+    /* ── Vertical Stacking for Stats Grid ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2x2 grid so all 4 boxes stay together */
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    /* ── Horizontal Scrolling for Blog/Chronicles Grid ── */
+    .blog-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; /* Firefox */
+        padding-bottom: 25px;
+        /* Allow scroll container to bleed to screen edge */
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        gap: 15px;
+    }
+
+    /* Hide scrollbar for Chrome/Safari */
+    .blog-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .blog-card {
+        scroll-snap-align: center;
+        flex: 0 0 calc(80% - 15px); /* Narrower width clearly reveals the next card */
+        /* Turn off any hover translations that break scrolling bounding boxes on mobile */
+        transform: none !important; 
+    }
 }
