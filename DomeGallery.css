@@ -1,0 +1,476 @@
+/* ================================================
+   Stack-to-Center Carousel  —  DomeGallery.css
+================================================ */
+
+.gallery {
+    padding: 80px 0 60px;
+    background: var(--black);
+    overflow: hidden;
+}
+
+.gallery-hint-text {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    color: rgba(0, 191, 255, 0.35);
+    margin-top: -40px;
+    margin-bottom: 0;
+}
+
+/* ── Main carousel stage ── */
+.stack-carousel {
+    position: relative;
+    width: 100%;
+    height: 540px;
+    margin-top: 40px;
+}
+
+/* ── Individual card ── */
+.stack-card {
+    position: absolute;
+    top: 50%;
+    width: 210px;
+    height: 290px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #080808;
+    border: 1px solid rgba(0, 191, 255, 0.15);
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    will-change: transform, left, opacity;
+    /* default: no transition — JS controls each phase */
+}
+
+.stack-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Glow state when at center */
+.stack-card.showcasing {
+    border-color: rgba(0, 191, 255, 0.7);
+    box-shadow:
+        0 0 0 1px rgba(0, 191, 255, 0.25),
+        0 30px 90px rgba(0, 0, 0, 0.9),
+        0 0 70px rgba(0, 191, 255, 0.28);
+}
+
+/* ── Showcase label (bottom of center card) ── */
+.showcase-label {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 80px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--neon-blue);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    text-shadow: 0 0 12px rgba(0, 191, 255, 0.5);
+}
+
+.showcase-label.visible { opacity: 1; }
+
+/* ── Progress dots ── */
+.carousel-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.carousel-dot.active {
+    width: 22px;
+    border-radius: 3px;
+    background: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.6);
+}
+
+/* ── Paused badge ── */
+.carousel-paused-badge {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.35);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+
+.carousel-paused-badge.visible { opacity: 1; }
+
+/* ── Fullscreen popup (click to open) ── */
+.card-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    padding: 40px;
+}
+
+.card-popup-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ── Wrapper: split layout ── */
+.card-popup-wrapper {
+    display: flex;
+    max-width: 1100px;
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(10, 31, 68, 0.6), rgba(0, 0, 0, 0.8));
+    border: 1px solid rgba(0, 191, 255, 0.2);
+    box-shadow:
+        0 0 0 1px rgba(0, 191, 255, 0.08),
+        0 40px 120px rgba(0, 0, 0, 0.9),
+        0 0 80px rgba(0, 191, 255, 0.08);
+    transform: scale(0.88) translateY(30px);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1),
+                opacity 0.4s ease;
+}
+
+.card-popup-overlay.active .card-popup-wrapper {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* ── Image side ── */
+.card-popup-img-side {
+    flex: 0 0 50%;
+    max-width: 50%;
+    position: relative;
+    overflow: hidden;
+    background: #050505;
+}
+
+.card-popup-img-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 60%, rgba(0, 0, 0, 0.5) 100%);
+    pointer-events: none;
+}
+
+.card-popup-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.card-popup-overlay.active .card-popup-img {
+    transform: scale(1);
+}
+
+.card-popup-img:hover {
+    transform: scale(1.05);
+}
+
+/* ── Info side ── */
+.card-popup-info {
+    flex: 1;
+    padding: 48px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 191, 255, 0.3) transparent;
+}
+
+.card-popup-info::-webkit-scrollbar {
+    width: 4px;
+}
+
+.card-popup-info::-webkit-scrollbar-thumb {
+    background: rgba(0, 191, 255, 0.3);
+    border-radius: 2px;
+}
+
+/* ── Category badge ── */
+.popup-category-badge {
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--neon-blue);
+    background: rgba(0, 191, 255, 0.08);
+    border: 1px solid rgba(0, 191, 255, 0.25);
+    padding: 6px 18px;
+    border-radius: 4px;
+    width: fit-content;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(12px);
+}
+.card-popup-overlay.active .popup-category-badge {
+    animation: popupFadeUp 0.5s ease 0.1s forwards;
+}
+
+/* ── Event title ── */
+.popup-event-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    opacity: 0;
+    transform: translateY(12px);
+}
+.card-popup-overlay.active .popup-event-title {
+    animation: popupFadeUp 0.5s ease 0.15s forwards;
+}
+
+/* ── Meta info (place + date) ── */
+.popup-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 22px;
+    opacity: 0;
+    transform: translateY(12px);
+}
+.card-popup-overlay.active .popup-meta {
+    animation: popupFadeUp 0.5s ease 0.2s forwards;
+}
+
+.popup-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.popup-meta-item i {
+    color: var(--neon-blue);
+    font-size: 0.85rem;
+}
+
+/* ── Description ── */
+.popup-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(12px);
+}
+.card-popup-overlay.active .popup-description {
+    animation: popupFadeUp 0.5s ease 0.25s forwards;
+}
+
+/* ── Achievements ── */
+.popup-achievements {
+    opacity: 0;
+    transform: translateY(12px);
+}
+.card-popup-overlay.active .popup-achievements {
+    animation: popupFadeUp 0.5s ease 0.3s forwards;
+}
+
+.popup-ach-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--neon-blue);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.popup-ach-title i {
+    font-size: 0.9rem;
+}
+
+.popup-ach-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup-ach-list li {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 191, 255, 0.05);
+    border: 1px solid rgba(0, 191, 255, 0.1);
+    border-left: 3px solid var(--neon-blue);
+    padding: 10px 16px;
+    border-radius: 0 8px 8px 0;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.card-popup-overlay.active .popup-ach-list li {
+    animation: popupSlideIn 0.4s ease forwards;
+}
+
+.popup-ach-list li:hover {
+    background: rgba(0, 191, 255, 0.1);
+    border-left-color: #00e5ff;
+    transform: translateX(4px);
+}
+
+/* ── Divider ── */
+.popup-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.2), transparent);
+    margin: 24px 0 16px;
+    opacity: 0;
+}
+.card-popup-overlay.active .popup-divider {
+    animation: popupFadeUp 0.5s ease 0.45s forwards;
+}
+
+/* ── Footer ── */
+.popup-footer {
+    opacity: 0;
+}
+.card-popup-overlay.active .popup-footer {
+    animation: popupFadeUp 0.5s ease 0.5s forwards;
+}
+
+.popup-tag {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Popup animations ── */
+@keyframes popupFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popupSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ── Close button ── */
+.card-popup-close {
+    position: absolute;
+    top: 28px;
+    right: 36px;
+    font-size: 2.5rem;
+    font-weight: 200;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.25s, transform 0.25s;
+    z-index: 9999;
+}
+
+.card-popup-close:hover {
+    color: var(--neon-blue);
+    transform: rotate(90deg) scale(1.1);
+    text-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .card-popup-wrapper {
+        flex-direction: column;
+        max-height: 92vh;
+    }
+
+    .card-popup-img-side {
+        flex: 0 0 auto;
+        max-width: 100%;
+        max-height: 40vh;
+    }
+
+    .card-popup-img-side::after {
+        background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+    }
+
+    .card-popup-info {
+        padding: 28px 24px;
+    }
+
+    .card-popup-overlay {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .stack-carousel { height: 420px; }
+    .stack-card { width: 160px; height: 220px; }
+
+    .popup-event-title {
+        font-size: 1.4rem;
+    }
+
+    .popup-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .card-popup-close {
+        top: 12px;
+        right: 16px;
+        font-size: 2rem;
+    }
+}
